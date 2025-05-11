@@ -10,13 +10,23 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      // Sign in with email/password
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Get the current user
+      const user = userCredential.user;
+
+      // ✅ Log Firebase Auth ID Token
+      const idToken = await user.getIdToken();
+      console.log("Firebase Auth ID Token:", idToken);
+
+      // Navigate to home page
       navigate("/");
     } catch (error) {
       setError(error.message);
@@ -24,6 +34,7 @@ export default function Login() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
